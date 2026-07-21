@@ -9,3 +9,4 @@ llama-cpp-python
 langchain-ollama
 mcp
 streamlit
+python-dotenv

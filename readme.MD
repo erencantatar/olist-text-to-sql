@@ -184,6 +184,29 @@ documentation. Don't over-engineer.
 
 ---
 
+## What I learned
+
+- **FastMCP** — building an MCP server: exposing the text-to-SQL engine as agent-callable
+  tools (`ask_csv`, `flag_answer`) with just an `@mcp.tool` decorator. Built it twice
+  (FastMCP vs the raw MCP SDK in `manual_mcp_server.py`) to see exactly what the framework
+  auto-generates — the JSON tool schema, the call dispatcher, and the stdio/asyncio plumbing.
+- **Ollama's OpenAI-compatible API** — one `ChatOpenAI` client drives local and cloud models
+  via a `base_url` swap; the model runs as a warm background server, not loaded into the app.
+- **LangChain LCEL** — the `prompt | llm | parser` pipe, reused unchanged for both SQL
+  generation and the result explanation.
+- **Self-correcting LLM loops** — feeding SQL errors + the real column list back to the model
+  turns a one-shot generator into a conversation that fixes itself.
+
+## TODO / next steps
+
+- [ ] **Add Pydantic AI for structured model output** — replace the `CLARIFY:` / `IMPOSSIBLE:`
+  string-prefix convention with a validated Pydantic schema, so the model returns typed,
+  guaranteed-shape output (intent + SQL / message) instead of text we parse by hand.
+- [ ] Semantic (embedding) retrieval for feedback memory — currently token-overlap, misses
+  paraphrases (the hybrid SQL + semantic-search bonus).
+- [ ] A trained prediction model (late-delivery predictor is the natural pick, given the
+  delivery-speed → review-score signal in the EDA).
+
 ## Docs
 
 - **`docs/FINDINGS.md`** — data model, join keys, data gotchas, break-attempts, eval

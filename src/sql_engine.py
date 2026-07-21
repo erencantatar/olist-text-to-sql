@@ -12,6 +12,7 @@ import sqlite3
 
 import pandas as pd
 import requests
+from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -20,6 +21,10 @@ import memory
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "../data/Brazilian_ECommerce_Olist")
+
+# Load OPENROUTER_API_KEY (and any other vars) from the project-root .env, no
+# matter which directory the app/MCP/eval is launched from. .env is gitignored.
+load_dotenv(os.path.join(BASE_DIR, "..", ".env"))
 
 # Map friendly SQL table names -> source CSV files. Covers the assignment's
 # required trio (orders, order_reviews, order_customers) plus order_items so
