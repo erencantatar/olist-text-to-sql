@@ -1,0 +1,32 @@
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Python venv ---
+eraneos/
+.venv/
+venv/
+
+# --- Python caches ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# --- OS / editor ---
+.DS_Store
+.vscode/
+.idea/
+
+# --- Local tooling ---
+.claude/
+
+# --- Personal interview study guides + presentation notes (local-only) ---
+docs/README.md
+docs/0*_*.md
+PRESENTATION.md
+
+# --- Large unused data file (geolocation is NOT loaded — see docs/FINDINGS.md §2) ---
+data/Brazilian_ECommerce_Olist/olist_geolocation_dataset.csv

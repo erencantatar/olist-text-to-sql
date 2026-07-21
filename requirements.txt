@@ -1,0 +1,11 @@
+fastmcp
+pandas
+requests
+langchain
+langchain-core
+langchain-community
+langchain-openai
+llama-cpp-python
+langchain-ollama
+mcp
+streamlit
