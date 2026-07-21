@@ -32,26 +32,46 @@ Streamlit         → answer + table + chart + 👍/👎
 
 ## Quickstart
 
-### Prerequisites
+### Prerequisites — pick ONE model source
 
-[Ollama](https://ollama.com) running with a model pulled (default — small and strong at SQL):
+You need a model to generate the SQL. Two options, selectable in the app's sidebar:
+
+**Option A — Local (Ollama), free, no key.** Install [Ollama](https://ollama.com) and pull
+the default model (small, fast, strong at SQL):
 
 ```bash
 ollama pull qwen2.5-coder:7b
 ```
+
+**Option B — Cloud (OpenRouter), needs an API key.** No local model needed — get a key at
+https://openrouter.ai/keys, then create your private `.env`:
+
+```bash
+cp .env.example .env             # .env is gitignored — your key never gets committed
+# edit .env and set: OPENROUTER_API_KEY=sk-or-v1-...
+```
+
+The app loads `.env` automatically on startup. In the sidebar choose **Provider → OpenRouter**.
 
 ### Setup
 
 ```bash
 ./setup.sh                       # creates venv 'eraneos', installs deps
 source eraneos/bin/activate
-python src/seed_memory.py        # once: seed verified golden examples
+python src/seed_memory.py        # run ONCE — see note below
 ```
+
+> **What `seed_memory.py` does:** it pre-writes 3 verified, hand-checked `question → SQL`
+> pairs into the feedback memory (`data/sql_feedback.jsonl`) marked 👍. Those become
+> few-shot examples the model can copy, so hard questions (e.g. the multi-step
+> repeat-customer one) work on the first try instead of failing on a cold, empty memory.
+> Think of it as giving the model a cheat-sheet of worked examples before the exam. Safe to
+> skip (the app still runs) and safe to re-run (just appends).
 
 ### Run
 
 ```bash
-# Streamlit chat UI (recommended) — use `python -m` so the venv interpreter is used
+# Streamlit chat UI (recommended)
 python -m streamlit run src/app.py
 
 # Exploratory data analysis is a page in the app's sidebar (📊 EDA),
@@ -66,6 +86,15 @@ fastmcp call src/mcp_server.py ask_csv question="which state has most customers"
 # Automated eval set
 python src/eval.py
 ```
+
+> **Why `python -m streamlit ...` and not just `streamlit ...`?** `python -m streamlit`
+> runs Streamlit using **the exact `python` on your PATH — i.e. the activated `eraneos`
+> venv's interpreter**, so it sees the venv's installed packages (`langchain_openai`,
+> `python-dotenv`, …). Calling the bare `streamlit` command instead runs whichever
+> `streamlit` launcher appears first on PATH, which on a machine with multiple Python
+> installs can be a *different* interpreter that's missing those deps → `ModuleNotFoundError`.
+> `python -m` removes that ambiguity. (This machine has two Streamlit installs — see
+> [docs/FINDINGS.md §6](docs/FINDINGS.md).)
 
 ---
 
